@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const dns = require('dns');
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
@@ -25,11 +26,44 @@ app.get('/api/hello', function(req, res) {
 });
 
 
+
+// original_url and short_url
+
+let urlList = {}
+let short_url = 1
+
 app.post('/api/shorturl',(req,res) => {
 
   const {url} = req.body
+  
+  urlList[short_url] = url
 
-res.status(200).send(`${url}`)
+/*dns.lookup('www.google.com', err => {
+  if(err)
+  {
+    console.log(err)
+  }
+
+})*/
+
+
+
+res.status(200).json({original_url: url, short_url:short_url})
+
+short_url ++;
+
+console.log(urlList)
+
+
+})
+
+app.get('/api/shorturl/:short_url', (req,res) => {
+
+  const {short_url} = req.params
+
+  
+  res.redirect(urlList[short_url])
+
 })
 
 
