@@ -10,6 +10,11 @@ app.use(cors());
 
 app.use('/public', express.static(`${process.cwd()}/public`));
 
+
+// middleware to handle post body
+app.use(express.urlencoded({extended: false}))
+
+
 app.get('/', function(req, res) {
   res.sendFile(process.cwd() + '/views/index.html');
 });
@@ -18,6 +23,15 @@ app.get('/', function(req, res) {
 app.get('/api/hello', function(req, res) {
   res.json({ greeting: 'hello API' });
 });
+
+
+app.post('/api/shorturl',(req,res) => {
+
+  const {url} = req.body
+
+res.status(200).send(`${url}`)
+})
+
 
 app.listen(port, function() {
   console.log(`Listening on port ${port}`);
