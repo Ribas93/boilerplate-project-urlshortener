@@ -53,7 +53,7 @@ app.get('/api/shorturl/:short_url', (req,res) => {
 
   const {short_url} = req.params
 
-  res.redirect(urlList[short_url])
+  res.redirect(listaUrl[short_url])
 
 })
 
