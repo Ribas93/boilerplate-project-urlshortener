@@ -12,7 +12,7 @@ app.use(cors());
 app.use('/public', express.static(`${process.cwd()}/public`));
 
 
-// middleware to handle post body
+// middleware para ter acesso a ao req.body em post!
 app.use(express.urlencoded({extended: false}))
 
 
@@ -20,48 +20,39 @@ app.get('/', function(req, res) {
   res.sendFile(process.cwd() + '/views/index.html');
 });
 
-// Your first API endpoint
-app.get('/api/hello', function(req, res) {
-  res.json({ greeting: 'hello API' });
-});
 
+// original_url and short_url 
 
+let listaUrl = {}
+let num = 1
 
-// original_url and short_url
-
-let urlList = {}
-let short_url = 1
-
+// parte 1
 app.post('/api/shorturl',(req,res) => {
 
   const {url} = req.body
   
-  urlList[short_url] = url
-
-/*dns.lookup('www.google.com', err => {
-  if(err)
+  // se a url n comecar com 'http' sera invalida!
+  if(!url.startsWith('http'))
   {
-    console.log(err)
+    return res.json({error:'invalid url'})
   }
 
-})*/
+  // criando chave(num) e valor(url) para adicional a variavel (listaUrl)
+  listaUrl[num] = url
 
 
+  
+  res.status(200).json({original_url:url, short_url:num})
 
-res.status(200).json({original_url: url, short_url:short_url})
-
-short_url ++;
-
-console.log(urlList)
-
+  num ++;
 
 })
 
+// parte 2
 app.get('/api/shorturl/:short_url', (req,res) => {
 
   const {short_url} = req.params
 
-  
   res.redirect(urlList[short_url])
 
 })
